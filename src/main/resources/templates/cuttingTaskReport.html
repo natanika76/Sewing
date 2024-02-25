@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/headFragment}"></head>
+
+<body>
+
+<div th:replace="~{fragments/headerFragment}"></div>
+
+<br/><br/>
+
+<div class="container">
+    <h2>Процесс крой</h2>
+    <form action="#" th:action="@{/categories/cuttingTaskReport}" method="get" class="form-inline">
+        <h2 rowspan="3" class="fw-bold" th:text="${currentUserName}"></h2>
+
+        <!-- Форма выбора даты -->
+        <div class="form-group mx-2">
+            <label for="startDate">Выберите дату:</label>
+            <input type="date" id="startDate" name="startDate" class="form-control" required th:value="${startDate}" />
+        </div>
+
+        <div class="form-group mx-2">
+            <label for="customer" class="form-label">Выберите заказчика:</label>
+            <select id="customer" name="customer" class="form-control">
+                <option value="0" th:selected="${selectedCustomerId eq 0}">Все заказчики</option>
+                <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.name}" th:selected="${customer.id eq selectedCustomerId}"></option>
+            </select>
+        </div>
+        <!-- Выпадающий список для выбора категории -->
+        <div class="form-group mx-2">
+            <label for="category">Категория:</label>
+            <select id="category" name="category" class="form-control">
+                <option value="0" th:selected="${selectedCategoryId eq 0}">Все категории</option>
+                <option value="" selected>Выберите категорию</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:data-customer-id="${category.customer.id}" th:selected="${category.id eq selectedCategoryId}"></option>
+            </select>
+        </div>
+        <!-- Выпадающий список для выбора материала -->
+        <div class="form-group mx-2">
+            <label for="nameMaterial">Материал:</label>
+            <select id="nameMaterial" name="nameMaterial" class="form-control">
+                <option value="0" th:selected="${selectedCategoryId eq 0}">Весь материал</option>
+                <option value="" selected>Выберите материал</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:data-customer-id="${category.customer.id}" th:selected="${category.id eq selectedCategoryId}"></option>
+            </select>
+        </div>
+
+        <div class="form-group d-flex justify-content-end p-2">
+            <button type="submit" class="btn btn-primary">Ок</button>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Размер:</th>
+            <th>Рост:</th>
+            <th>Кол-во</th>
+            <th>Выполнение:</th>
+            <th>Остаток:</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <h5>Задание на крой:</h5>
+        <div>
+
+            <table id="fieldsTable">
+                <tr th:each="sizByDate : ${sizeByDates}">
+                    <td style="padding-right: 20px;">
+                        <input type="text" class="form-control" id="size" name="size" th:value="${sizByDate.size}" readonly >
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="height" name="height" th:value="${sizByDate.height}" readonly >
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="quantity" name="quantity" th:value="${sizByDate.quantity}" readonly >
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td></td>
+                    <th>Итого:</th>
+                </tr>
+            </table>
+
+        </div>
+
+    </table>
+
+</div>
+
+<script th:inline="javascript">
+    function updateCategoryList() {
+        var customerSelect = document.getElementById('customer');
+        var categorySelect = document.getElementById('category');
+        var selectedCustomerId = customerSelect.value;
+
+        // Очищаем список категорий
+        categorySelect.innerHTML = '<option value="0">Все категории</option>';
+
+        // Фильтруем категории в зависимости от выбранного заказчика
+        originalCategories.forEach(function(categoryOption) {
+            if (categoryOption.getAttribute('data-customer-id') === selectedCustomerId || selectedCustomerId === '0') {
+                categorySelect.appendChild(categoryOption.cloneNode(true));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

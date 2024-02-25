@@ -156,7 +156,7 @@ public class AdminWarehouseServiceImpl implements AdminWarehouseService {
             updatedWarehouse.setStartWork(warehouseDto.getStartWork());
             updatedWarehouse.setEndWork(warehouseDto.getEndWork());
             updatedWarehouse.setUnitsOfMeasurement(warehouseDto.getUnitsOfMeasurement());
-
+            updatedWarehouse.setCategory(warehouseDto.getCategory());
             Long id =warehouseDto.getId();
             List<Integer> height = warehouseDto.getHeight();
             List<String> size = warehouseDto.getSize();

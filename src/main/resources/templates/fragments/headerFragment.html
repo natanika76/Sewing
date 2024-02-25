@@ -59,6 +59,15 @@
                     th:classappend="${#authorization.expression('hasRole(''DEMIGOD'')') ? 'active' : ''}">
                     <a class="nav-link" th:href="@{/admin/warehouseProcess}">Склад</a>
                 </li>
+
+                <li class="nav-item" th:if="${#authorization.expression('hasRole(''USER'')')}"
+                    th:classappend="${#authorization.expression('hasRole(''USER'')') ? 'active' : ''}">
+                    <a class="nav-link" th:href="@{/categories/cuttingTaskReport}">Крой</a>
+                </li>
+                <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'') or hasRole(''DEMIGOD'')')}" th:classappend="${#authorization.expression('hasRole(''ADMIN'')') ? 'active' : ''}">
+                    <a class="nav-link" th:href="@{/admin/earnings}">Крой</a>
+                </li>
+
                 <li class="nav-item" th:if="${#authorization.expression('hasRole(''DEMIGOD'')')}" th:classappend="${#authorization.expression('hasRole(''DEMIGOD'')') ? 'active' : ''}">
                     <a class="nav-link" th:href="@{/demigod}">Super-admin</a>
                 </li>
