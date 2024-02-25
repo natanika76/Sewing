@@ -21,21 +21,20 @@
                 max-width: 460px; /*установка максимальной ширины */
             }
         </style>
-
-        <!--заказчик -->
-
+        <!--заказчик-->
         <div class="form-group mx-3">
             <label for="customer">Заказчик:</label>
-            <!--   <input type="hidden" id="customer" name="customer" th:value="${warehouseData.customer}"/>-->
             <input type="text" class="form-control" id="customer" th:value="${warehouseData.customer.getName()}" readonly/>
         </div>
 
-        <!-- категория-->
+        <!-- Выпадающий список для выбора и редактирования категории -->
         <div class="form-group mx-3">
-            <label for="categoryId" class="form-label">Категория:</label>
-            <!-- <input type="hidden" id="categoryId" name="categoryId" th:value="${warehouseData.category.id}"/>-->
-            <input type="text" class="form-control" id="categoryId" th:value="${warehouseData.category.getName()}" readonly/>
+            <label for="category">Категория:</label>
+            <select name="category" class="form-control" id="category" onchange="updateCategoryList()">
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id eq warehouseData.category.id}"></option>
+            </select>
         </div>
+
 
         <!--материал-->
         <div class="mx-3">

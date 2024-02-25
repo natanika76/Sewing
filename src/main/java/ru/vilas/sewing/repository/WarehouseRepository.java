@@ -21,6 +21,9 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
     @Query("UPDATE Warehouse w SET w.archive = true WHERE w.id = :warehouseId")
     void sendToArchive(@Param("warehouseId") Long warehouseId);
 
+    @Query("SELECT w.customer.id FROM Warehouse w WHERE w.id = :warehouseId")
+    Long findCustomerIdByWarehouseId(@Param("warehouseId") Long warehouseId);
+
 }
 
 

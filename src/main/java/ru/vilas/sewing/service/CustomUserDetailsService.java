@@ -52,6 +52,19 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new RuntimeException("User not found with username: " + username);
         }
     }
+    public String getNameByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        // Проверяем, найден ли пользователь с заданным именем
+        if (userOptional.isPresent()) {
+            return userOptional.get().getName();
+        } else {
+            // Обработка случая, когда пользователь с заданным именем не найден
+            throw new RuntimeException("User not found with username: " + username);
+        }
+    }
+
+
 
     public User getCurrentUser() {
         // Получение информации о текущем пользователе

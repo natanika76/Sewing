@@ -9,6 +9,7 @@ import ru.vilas.sewing.dto.SizeByDateDto;
 import ru.vilas.sewing.model.SizeByDate;
 import ru.vilas.sewing.dto.WarehouseDto;
 import ru.vilas.sewing.model.*;
+import ru.vilas.sewing.repository.CategoryRepository;
 import ru.vilas.sewing.repository.SizeByDateRepository;
 import ru.vilas.sewing.repository.WarehouseRepository;
 import ru.vilas.sewing.service.CategoryService;
@@ -31,17 +32,18 @@ public class AdminWarehouseController {
     private final CategoryService categoryService;
     private final AdminWarehouseService adminWarehouseService;
     private final WarehouseRepository warehouseRepository;
-
+private  final CategoryRepository categoryepository;
     private final SizeByDateRepository sizeByDateRepository;
 
 
 
 
-    public AdminWarehouseController(CustomerService customerService, CategoryService categoryService, AdminWarehouseService adminWarehouseService, WarehouseRepository warehouseRepository, SizeByDateRepository sizeByDateRepository) {
+    public AdminWarehouseController(CustomerService customerService, CategoryService categoryService, AdminWarehouseService adminWarehouseService, WarehouseRepository warehouseRepository, CategoryRepository categoryepository, SizeByDateRepository sizeByDateRepository) {
         this.customerService = customerService;
         this.categoryService = categoryService;
         this.adminWarehouseService = adminWarehouseService;
         this.warehouseRepository = warehouseRepository;
+        this.categoryepository = categoryepository;
 
         this.sizeByDateRepository = sizeByDateRepository;
     }
@@ -101,8 +103,6 @@ public class AdminWarehouseController {
             categories.add(categoryService.getCategoryById(categoryId));
         }
 
-        /*SizeByDate sizeByDate = new SizeByDate();
-         sizeByDate.setWarehouse(warehouse); // Устанавливаем объект Warehouse в объект SizeByDate*/
         Warehouse warehouse = new Warehouse(); // Создаем объект Warehouse
         WarehouseDto warehouseDto = new WarehouseDto();
 
@@ -140,9 +140,22 @@ public class AdminWarehouseController {
         return "admin/showWarehouseProcess";
     }
     @GetMapping("/edit/{id}")
-    public String editWarehouseProcess(@PathVariable Long id,Model model) {
+    public String editWarehouseProcess(@PathVariable Long id,Model model,
+                                       @RequestParam(name = "categoryId", required = false) Long categoryId) {
+
+        Long customerId = warehouseRepository.findCustomerIdByWarehouseId(id);
+        List<Category> categories = categoryepository.findByCustomerId(customerId);
+
+
+        List<Customer> customers = customerService.getAllCustomers();
         Warehouse warehouse = adminWarehouseService.getWarehouseById(id);
         List<SizeByDateDto> sizeByDate =adminWarehouseService.getSizeByDateById(id);
+
+        model.addAttribute("selectedCustomerId", customerId);
+       // model.addAttribute("selectedCategoryId", categoryId);
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("customers", customers);
 
         model.addAttribute("sizeByDates", sizeByDate);
         model.addAttribute("warehouseData", warehouse);
